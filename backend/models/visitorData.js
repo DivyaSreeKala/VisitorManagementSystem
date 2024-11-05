@@ -2,24 +2,39 @@
 const mongoose = require("mongoose");
 
 const visitorSchema = new mongoose.Schema({
-    fullName:String,
-    email:String,
-    phoneNo:Number,
-    address:String,
-    department:String,
-    purposeOfVisit:String,
-    idType:String,
-    idProof:String,
-    // createdAt:Date,
-    timestamps: { createdAt: {
-                            type: Date,
-                            default: Date.now
-                            },
-                    updatedAt: {
-                            type: Date,
-                            default: Date.now
-                            }
-                } ,
+    fullName:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true
+    },
+    phoneNo:{
+        type:Number,
+        required:true
+    },
+    address:{
+        type:String,
+        required:true
+    },
+    department:{
+        type:String,
+        required:true
+    },
+    purposeOfVisit:{
+        type:String,
+        required:true
+    },
+    idType:{
+        type:String,
+        required:true
+    },
+    idProof:{
+        type:String,
+        required:true
+    },
+    
     status:String,
     dateAlloted:Date,
     timeIn:Date,
@@ -27,7 +42,10 @@ const visitorSchema = new mongoose.Schema({
     uniqueCode:String,
     securityId:String
 
-})
+    },{
+        timestamps:true
+    }
+)
 
 const visitorModel = mongoose.Model('visitor', visitorSchema);
 

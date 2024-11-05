@@ -1,6 +1,6 @@
 
 const express = require("express");
-
+const bcrypt = require("bcrypt");
 const router = new express.Router();
 
 const adminModel = require('../models/adminData');
@@ -18,19 +18,20 @@ router.get('/:id',async(req,res) => {
         console.log(err);
     }
 })
+
 router.put('/edit-admin/:id',async(req,res) => {
     try{
         const id = req.params.id;
         const data = adminModel.findOneAndUpdate(id, req.body);
         res.status(200).send('Post Succesfull');
     }catch(err){
-        req.status(404).send(err)
+        req.status(404).send(err);
     }
 });
+
 router.post('/add',async(req, res) => {
     try{
         const requestData = req.body;
-        console.log(req.body)
         const data = new adminModel(requestData); 
         const savedData = await data.save();
         res.status(200).send(savedData);
@@ -38,4 +39,13 @@ router.post('/add',async(req, res) => {
         res.status(404).send(err);
     }
 })
+
+router.get('/login',async(req,res) => {
+    try{
+
+    }catch(err){
+
+    }
+})
+
 module.exports = router;
