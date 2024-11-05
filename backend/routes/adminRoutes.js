@@ -32,6 +32,9 @@ router.put('/edit-admin/:id',async(req,res) => {
 router.post('/add',async(req, res) => {
     try{
         const requestData = req.body;
+        const hashPassword = await bcrypt.hash(req.body.password,13);
+        requestData.password = hashPassword;
+
         const data = new adminModel(requestData); 
         const savedData = await data.save();
         res.status(200).send(savedData);
@@ -40,11 +43,23 @@ router.post('/add',async(req, res) => {
     }
 })
 
-router.get('/login',async(req,res) => {
+router.post('/login',async(req,res) => {
     try{
-
+        const { email, password } = req.body;
+        const user = await adminModel.findOne({ email })
+        console.log(user);
+        if(!user){
+             res.status(200).send("Invalid Username");
+             return
+        }
+        isValid = await bcrypt.compare(password,user.password);
+        if(!isValid){
+            res.sttus(200).send("Incorrect Password");
+            return
+        }
+        res.send("login successfull");
     }catch(err){
-
+        res.status(404).send(err);
     }
 })
 
