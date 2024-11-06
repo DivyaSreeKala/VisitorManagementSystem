@@ -19,13 +19,13 @@ router.get('/:id',async(req,res) => {
     }
 })
 
-router.put('/edit-admin/:id',async(req,res) => {
+router.put('/edit/:id',async(req,res) => {
     try{
         const id = req.params.id;
-        const data = adminModel.findOneAndUpdate(id, req.body);
-        res.status(200).send('Post Succesfull');
+        const data = await adminModel.findOneAndUpdate({ _id: id }, req.body);
+        res.status(200).send('Update Succesfull');
     }catch(err){
-        req.status(404).send(err);
+        res.status(404).send(err);
     }
 });
 
@@ -42,6 +42,9 @@ router.post('/add',async(req, res) => {
         res.status(404).send(err);
     }
 })
+
+
+
 
 router.post('/login',async(req,res) => {
     try{

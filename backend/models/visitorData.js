@@ -32,11 +32,15 @@ const visitorSchema = new mongoose.Schema({
     },
     idProof:{
         type:String,
-        required:true
+        required:false
     },
     
-    status:String,
-    dateAlloted:Date,
+    status:{
+        type:String,
+        enum:["pending","approved","rejected"],
+        default:"pending"
+    },
+    // dateAlloted:Date,
     timeIn:Date,
     timeOut:Date,
     uniqueCode:String,
@@ -47,6 +51,6 @@ const visitorSchema = new mongoose.Schema({
     }
 )
 
-const visitorModel = mongoose.Model('visitor', visitorSchema);
+const visitorModel = mongoose.model('visitor', visitorSchema);
 
 module.exports = visitorModel;
