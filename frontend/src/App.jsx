@@ -16,9 +16,9 @@ function App() {
       
        {/* <Header/>
         */}
-        {/* <Login/> */}
+        <Login/>
         
-         <VisitorPassForm/>
+         {/* <VisitorPassForm/> */}
           
     </>
   )

@@ -19,7 +19,8 @@ app.use('/security', securityRoutes);
 const visitorRoutes = require('./routes/visitorRoutes');
 app.use('/visitor',visitorRoutes);
 
-
+const loginRoute = require('./routes/loginRoute');
+app.use('/login',loginRoute);
 
 
 const PORT = process.env.PORT;
