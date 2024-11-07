@@ -1,11 +1,14 @@
 const express = require("express");
 const cors = require("cors");
-
+const path = require("path");
 
 const app = new express();
 
 require('dotenv').config();
 require('./db/connection');
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/admin', adminRoutes);

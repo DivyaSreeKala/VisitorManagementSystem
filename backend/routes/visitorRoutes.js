@@ -1,6 +1,8 @@
 
 const express = require("express");
 const multer = require("multer");
+const nodemailer = require("nodemailer");
+
 const path = require("path");
 const router = express.Router();
 
@@ -12,11 +14,11 @@ router.use(express.urlencoded({extended:true}));
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './public/images'); // Specify folder
+      cb(null, './public/uploads'); // Specify folder
     },
     filename: function (req, file, cb) {
-      cb(null, `${file.originalname}_${Date.now()+path.extname(file.originalname)}`); // Keep original name with timestamp
-    }
+      cb(null, `${Date.now()+path.extname(file.originalname)}${file.originalname}`); // Keep original name with timestamp
+    }//_${Date.now()+path.extname(file.originalname)}
   });
   const upload = multer({ storage: storage });
 
@@ -25,7 +27,7 @@ const storage = multer.diskStorage({
 router.post('/register',upload.single('idProof'),async(req,res) => {
     try{
          // Construct the URL for the uploaded file
-        const url = req.protocol + '://' + req.get('host') + '/public/images/' + req.file.filename;
+        const url = req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename;
         console.log(req.file)
         const requestData = {
             fullName:req.body.fullName,
@@ -70,6 +72,16 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
         }
     })
         //update
+
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        host: "smtp.gmail.com",
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
+
     router.put('/edit/:id',async(req,res) => {
         try{
             const timestamp = Date.now().toString(36);
@@ -87,6 +99,23 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
                     // securityId: req.body.securityId   // Update securityId
                 },
             );
+
+            console.log(req.body.status)
+            if(req.body.status == "approved"){
+                const mailOptions = {
+                    from: 'dsk.dev77@gmail.com',
+                    to: 'divyasreekala99@gmail.com',
+                    subject: 'Hello',
+                    text: 'Hello World!',
+                };
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        console.error('Error sending email:', error);
+                    } else {
+                        console.log('Email sent:', info.response);
+                    }
+                });
+            }
             console.log(data);
             res.status(200).send("Update Successfull");
         }catch(err){
