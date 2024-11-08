@@ -17,8 +17,8 @@ const storage = multer.diskStorage({
       cb(null, './public/uploads'); // Specify folder
     },
     filename: function (req, file, cb) {
-      cb(null, `${Date.now()+path.extname(file.originalname)}${file.originalname}`); // Keep original name with timestamp
-    }//_${Date.now()+path.extname(file.originalname)}
+      cb(null, `${Date.now()+path.extname(file.originalname)}${file.originalname}`);
+    }
   });
   const upload = multer({ storage: storage });
 
@@ -28,7 +28,6 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
     try{
          // Construct the URL for the uploaded file
         const url = req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename;
-        console.log(req.file)
         const requestData = {
             fullName:req.body.fullName,
             email:req.body.email,
@@ -39,7 +38,6 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
             idType:req.body.idType,
             idProof:url
         };
-        console.log(requestData);
         const data = new visitorModel(requestData);
         const savedData = await data.save();
         res.status(200).send(savedData);
@@ -64,11 +62,9 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
     router.get('/:id',async(req,res) => {
         try{
             const data = await visitorModel.findById(req.params.id);
-            console.log(data);
             res.status(200).send(data);
         }catch(err){
             res.status(404).send(err);
-            console.log(err);
         }
     })
         //update
@@ -88,7 +84,6 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
             const randomPart = Math.random().toString(36).substring(2,8);
             const generatedUniqueCode = `${timestamp}-${randomPart}`
             const id = req.params.id;
-            console.log(req.body);
             const data = await visitorModel.findOneAndUpdate({ _id: id }, 
                 {
                     status: req.body.status,          // Update status
@@ -100,7 +95,6 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
                 },
             );
 
-            console.log(req.body.status)
             if(req.body.status == "approved"){
                 const mailOptions = {
                     from: 'dsk.dev77@gmail.com',
@@ -116,7 +110,6 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
                     }
                 });
             }
-            console.log(data);
             res.status(200).send("Update Successfull");
         }catch(err){
             res.status(404).send(err);

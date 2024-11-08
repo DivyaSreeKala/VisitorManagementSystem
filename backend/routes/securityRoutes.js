@@ -1,5 +1,6 @@
 
 const express = require("express");
+const bcrypt = require("bcrypt");
 
 const router = express.Router();
 
@@ -13,6 +14,8 @@ const securityModel = require('../models/securityData');
 router.post('/add',async(req,res) => {
     try{
         const requestData = req.body;
+        const hashPassword = await bcrypt.hash(req.body.password,13);
+        requestData.password = hashPassword;
     const data = new securityModel(requestData);
     const savedData = await data.save();
     res.status(200).send("Post Successfull");
@@ -54,11 +57,9 @@ router.get('/',async(req,res) => {
 router.get('/:id',async(req,res) => {
     try{
         const data = await securityModel.findById(req.params.id);
-        console.log(data);
         res.status(200).send(data);
     }catch(err){
         res.status(404).send(err);
-        console.log(err);
     }
 })
 
