@@ -24,7 +24,7 @@ router.post('/',async(req,res) => {
             return
         }
         const token = jwt.sign({ user }, process.env.SECRET_KEY);
-        res.send({role:user.role, token});
+        res.send({ role:user.role, token});
     }catch(err){
         res.status(404).send(err);
     }

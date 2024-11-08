@@ -1,5 +1,6 @@
 import React from 'react';
 import Sidebar from './Sidebar';
+import { useLocation } from 'react-router-dom';
 
 function AdminDashboard() {
     const interviewData = [
@@ -18,7 +19,8 @@ function AdminDashboard() {
           status: 'Approved'
         }
       ];
-      
+      const location = useLocation(); 
+      // console.log(location.state.user)
   return (
     <div className="flex overflow-hidden flex-col bg-slate-50">
       <header className="flex flex-wrap gap-5 justify-between py-4 pr-20 pl-6 w-full font-bold text-center bg-white border-b border-gray-200 max-md:px-5 max-md:max-w-full">
@@ -33,7 +35,7 @@ function AdminDashboard() {
         </button>
       </header>
       <div className="w-full max-w-[1385px] max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
+        <div className="flex gap-5 max-md:flex-col h-full bg-wh">
           <Sidebar user={"admin"}/>
           <main className="flex flex-col ml-5 w-4/5 max-md:ml-0 max-md:w-full">
             <div className="flex flex-col mt-10 w-full max-md:mt-10 max-md:max-w-full">

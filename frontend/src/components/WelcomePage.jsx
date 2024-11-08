@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function WelcomePage() {
+  const navigate = useNavigate();
   return (
     <div className="flex overflow-hidden flex-col pb-24 bg-slate-50">
       <header className="flex flex-wrap gap-5 justify-between py-4 pr-20 pl-5 w-full font-bold text-center bg-white border-b border-gray-200 max-md:px-5 max-md:max-w-full">
@@ -10,7 +12,7 @@ function WelcomePage() {
             VMS
           </h1>
         </div>
-        <button className="px-11 py-2.5 my-auto text-sm text-white whitespace-nowrap bg-orange-300 rounded-xl max-md:px-5">
+        <button className="px-11 py-2.5 my-auto text-sm text-white whitespace-nowrap bg-orange-300 rounded-xl max-md:px-5" onClick={()=>navigate('/login')}>
           Login
         </button>
       </header>
@@ -22,7 +24,8 @@ function WelcomePage() {
               <h2 className="tracking-wide text-center max-md:max-w-full max-md:text-4xl">
                 Welcome to our Visitor Management System
               </h2>
-              <button className="self-end px-7 pt-4 pb-9 mt-20 max-w-full rounded-xl bg-neutral-700 shadow-[0px_4px_8px_rgba(0,0,0,0.25)] tracking-[2.4px] w-[424px] max-md:px-5 max-md:mt-10 max-md:text-4xl">
+              <button className="self-end px-7 pt-4 pb-9 mt-20 max-w-full rounded-xl bg-neutral-700 shadow-[0px_4px_8px_rgba(0,0,0,0.25)] tracking-[2.4px] w-[424px] max-md:px-5 max-md:mt-10 max-md:text-4xl"
+              onClick={()=>navigate('/visitor-pass-registration')}>
                 Get Entry Pass
               </button>
             </div>

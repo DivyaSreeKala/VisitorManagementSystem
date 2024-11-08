@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const LoginForm = () => {
   const [input, setInput] = useState({
     username:"",
     password:""
-  })
+  })   
+  const navigate = useNavigate();
   const onInputChange = (e) => {
     setInput({...input, [e.target.name]:e.target.value});
   }
@@ -19,6 +21,11 @@ const LoginForm = () => {
       if(res.data.token){
             alert("Login Succesfull");
             localStorage.setItem('token',res.data.token);
+            const user = res.data.username;
+            if(res.data.role == "admin")
+              navigate('/admin')
+            if(res.data.role == "security")
+              navigate('/security')
       }
       else{
         alert(res.data);
