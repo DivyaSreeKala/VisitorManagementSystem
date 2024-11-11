@@ -14,11 +14,14 @@ const Header = () => {
           VMS
         </h2>
       </div>
-      <nav>
+      <button className="px-10 pt-2.5 pb-4 my-auto text-sm text-white whitespace-nowrap bg-red-500 rounded-xl max-md:px-5">
+          Logout
+        </button>
+      {/* <nav>
         <a href="#login" className="my-auto text-sm text-white">
           Login
         </a>
-      </nav>
+      </nav> */}
     </header>
   );
 };

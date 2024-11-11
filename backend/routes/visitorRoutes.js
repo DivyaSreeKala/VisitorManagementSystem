@@ -7,6 +7,8 @@ const path = require("path");
 const router = express.Router();
 
 const visitorModel = require('../models/visitorData');
+const authenticateJWT = require("../auth/authMiddleware");
+const roleMiddleware = require("../auth/roleMiddleware");
 
 router.use(express.json());
 router.use(express.urlencoded({extended:true}));
@@ -49,7 +51,7 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
 
     //by admin
         //get all
-    router.get('/',async(req,res) => {
+    router.get('/',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
         try{
             const data = await visitorModel.find();
             res.status(200).send(data);
@@ -59,7 +61,7 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
     })
 
         //get by id
-    router.get('/:id',async(req,res) => {
+    router.get('info/:id',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
         try{
             const data = await visitorModel.findById(req.params.id);
             res.status(200).send(data);
@@ -78,7 +80,7 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
         },
     });
 
-    router.put('/edit/:id',async(req,res) => {
+    router.put('/edit/:id',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
         try{
             const timestamp = Date.now().toString(36);
             const randomPart = Math.random().toString(36).substring(2,8);
@@ -92,7 +94,7 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
                     timeOut: req.body.timeOut,        // Update timeOut
                     uniqueCode: generatedUniqueCode ,  // Update uniqueCode
                     // securityId: req.body.securityId   // Update securityId
-                },
+                },{ new: true, runValidators: true }
             );
 
             if(req.body.status == "approved"){
@@ -100,15 +102,19 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
                     from: 'dsk.dev77@gmail.com',
                     to: 'divyasreekala99@gmail.com',
                     subject: 'Hello',
-                    text: 'Hello World!',
+                    html: `<div><h1>Hello World!</h1><a href="${req.protocol}://${req.hostname}:5173/details/${id}">Your Pass</a></div>`,
                 };
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        console.error('Error sending email:', error);
-                    } else {
-                        console.log('Email sent:', info.response);
-                    }
-                });
+                console.log(req)
+                //needs to set activation time and expiration time 
+                
+                // console.log(`${req.protocol}://${req.hostname}:5173/details/${id}`)
+                // transporter.sendMail(mailOptions, (error, info) => {
+                //     if (error) {
+                //         console.error('Error sending email:', error);
+                //     } else {
+                //         console.log('Email sent:', info.response);
+                //     }
+                // });
             }
             res.status(200).send("Update Successfull");
         }catch(err){
@@ -118,7 +124,7 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
 
 
         //delete
-router.delete('/delete/:id',async(req,res) => {
+router.delete('/delete/:id',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
     try{
         const id = req.params.id;
         const data = await visitorModel.findByIdAndDelete(id);
@@ -127,4 +133,64 @@ router.delete('/delete/:id',async(req,res) => {
         res.status(404).send(err);
     }
 })
+
+  //by security
+
+        //verify token
+    router.get('/verify-token/:token',async(req,res) => {
+        try{
+            const token = req.params.token;
+            console.log(token)
+            const data = await visitorModel.find({uniqueCode:token});
+            console.log(data);
+            res.status(200).send(data);
+        }catch(err){
+            res.status(404).send(err);
+            // console.log(err)
+        }
+    })
+
+    //visitor info in a link
+    router.get('/details/:id',async(req,res) => {
+        try{
+            const data = await visitorModel.findById(req.params.id);
+            const sendingData = { 
+                name:data.fullName,
+                department:data.department,
+                purposeOfVisit:data.purposeOfVisit,
+                status:data.status,
+                uniqueCode:data.uniqueCode
+            }
+            res.status(200).send(sendingData);
+        }catch(err){
+            res.status(404).send(err);
+        }
+    })
+
+//all
+    //daily visitor details
+    router.get('/daily',async(req,res) => {
+        try{
+            const now = new Date();
+            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            
+            const data = await visitorModel.find({
+                timeIn: { $gte:startOfDay },
+                timeOut: { $gte:endOfDay }
+            });
+
+            //------currrent time in between the timeIn and timeOut------
+
+            // const data = await visitorModel.find({
+            //     timeIn: { $lte:now },
+            //     timeOut: { $gte:now }
+            // });
+            console.log(data)
+            res.status(200).send(data);
+        }catch(err){
+            res.status(404).send("error in fetching");
+        }
+    })
+
 module.exports = router;

@@ -9,10 +9,16 @@ const securityModel = require('../models/securityData')
 router.use(express.json());
 router.use(express.urlencoded({extended : true}));
 
-router.get('/:id',async(req,res) => {
+const authenticateJWT = require('../auth/authMiddleware');
+const roleMiddleware = require('../auth/roleMiddleware');
+
+router.get('/:id',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
     try{
+        console.log(req.params.id)
         const data = await adminModel.findById(req.params.id);
+        console.log("hiii")
         console.log(data);
+        console.log(req.user)
         res.status(200).send(data);
     }catch(err){
         res.status(404).send(err);
@@ -20,7 +26,7 @@ router.get('/:id',async(req,res) => {
     }
 })
 
-router.put('/edit/:id',async(req,res) => {
+router.put('/edit/:id',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
     try{
         const id = req.params.id;
         const data = await adminModel.findOneAndUpdate({ _id: id }, req.body);
@@ -30,7 +36,7 @@ router.put('/edit/:id',async(req,res) => {
     }
 });
 
-router.post('/add',async(req, res) => {
+router.post('/add',authenticateJWT,roleMiddleware('admin'),async(req, res) => {
     try{
         const requestData = req.body;
         const hashPassword = await bcrypt.hash(req.body.password,13);

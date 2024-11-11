@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import { useLocation } from 'react-router-dom';
+import Header from './Header';
 
 function AdminDashboard() {
     const interviewData = [
@@ -23,7 +24,7 @@ function AdminDashboard() {
       // console.log(location.state.user)
   return (
     <div className="flex overflow-hidden flex-col bg-slate-50">
-      <header className="flex flex-wrap gap-5 justify-between py-4 pr-20 pl-6 w-full font-bold text-center bg-white border-b border-gray-200 max-md:px-5 max-md:max-w-full">
+      {/* <header className="flex flex-wrap gap-5 justify-between py-4 pr-20 pl-6 w-full font-bold text-center bg-white border-b border-gray-200 max-md:px-5 max-md:max-w-full">
         <div className="flex gap-5 text-3xl tracking-wide text-black">
           <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/a26c8f8f66b498ca15f03b38e0702f93f5adc24973319d21dd5822cd8ac844bb?placeholderIfAbsent=true&apiKey=f0b359b98b7042c7a2d21f164b56e543" alt="" className="object-contain shrink-0 rounded-full aspect-square w-[70px]" />
           <h1 className="flex-auto my-auto">
@@ -33,7 +34,8 @@ function AdminDashboard() {
         <button className="px-10 pt-2.5 pb-4 my-auto text-sm text-white whitespace-nowrap bg-red-500 rounded-xl max-md:px-5">
           Logout
         </button>
-      </header>
+      </header> */}
+      <Header/>
       <div className="w-full max-w-[1385px] max-md:max-w-full">
         <div className="flex gap-5 max-md:flex-col h-full bg-wh">
           <Sidebar user={"admin"}/>
@@ -56,18 +58,30 @@ function AdminDashboard() {
                   ))}
                 </div>
               </div>
-              <section className="mt-4 mb-0 ml-6 max-w-full w-[860px] max-md:mb-2.5">
-      <h1 className="sr-only">Interview Schedule</h1>
-      <table className="w-full text-sm font-bold tracking-normal text-black">
-        <thead>
+              {/* <section className="mt-4 mb-0 ml-6 max-w-full w-[860px] max-md:mb-2.5"> */}
+      {/* <h1 className="sr-only">Interview Schedule</h1> */}
+      <section className="flex flex-col items-start px-11 pt-9 pb-40 mt-7 w-full bg-white rounded-md border-2 border-solid border-slate-100 max-md:px-5 max-md:pb-24 max-md:max-w-full">
+          <div className="flex flex-col self-stretch w-full font-bold text-center max-md:max-w-full">
+            <div className="flex flex-wrap gap-5 justify-between items-start self-end max-w-full w-[932px]">
+              <h2 className="text-2xl tracking-wide text-black">Today's Visitor Details</h2>
+              <button className="flex gap-2.5 justify-center items-center px-2.5 py-5 mt-1.5 text-sm tracking-normal text-blue-900 rounded-xl bg-neutral-100 min-h-[59px]">
+                Filter & Short
+                <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/e2ce8b2817157b757bae90550491d83565e607c4201ac5ccad3617078fdeb2ee?placeholderIfAbsent=true&apiKey=f0b359b98b7042c7a2d21f164b56e543" alt="" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square" />
+              </button>
+            </div>
+          </div>
+      <table className="w-full mt-12 text-sm font-bold tracking-normal text-black">
+        <thead className='border-b border-solid border-zinc-300'>
           <tr>
-            <th className="text-left">Name</th>
-            <th className="text-left">Department</th>
-            <th className="text-left">Type</th>
-            <th className="text-left">Document</th>
-            <th className="text-left">Status</th>
+            <th className="text-left py-4">Name</th>
+            <th className="text-left py-4">Department</th>
+            <th className="text-left py-4">Type</th>
+            <th className="text-left py-4">Document</th>
+            <th className="text-left py-4">Status</th>
           </tr>
         </thead>
+        {/* <div className='w-full'>
+            <hr className="shrink-0 mt-4 h-0 border border-solid border-zinc-100 max-md:mt-10 max-md:w-full" /></div> */}
         <tbody>
           {interviewData.map((interview, index) => (
             <tr key={index} className="border-b border-gray-200">
@@ -78,7 +92,7 @@ function AdminDashboard() {
               <td className="py-4">
                 <span
                   className={`inline-block px-2 py-1 rounded ${
-                    interview.status === 'Checked In' ? 'bg-teal-500' : 'bg-zinc-400'
+                    interview.status === 'Checked In' ? 'bg-teal-500 w-fit' : 'bg-zinc-400'
                   } bg-opacity-20 w-[81px] text-center`}
                 >
                   {interview.status}

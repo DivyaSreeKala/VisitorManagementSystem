@@ -9,9 +9,12 @@ import Login from './components/Login'
 import VisitorPassForm from './components/VisitorPassForm'
 import AdminDashboard from './components/AdminDashboard'
 import SecurityDashboard from './components/SecurityDashboard'
+import ManageVisitor from './components/ManageVisitor'
+import ManageSecurity from './components/ManageSecurity'
+import VisitorPassView from './components/VisitorPassView'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
@@ -22,7 +25,9 @@ function App() {
         <Route path='/admin' element={<AdminDashboard/>}/>
         <Route path='/security' element={<SecurityDashboard/>}/>
         <Route path='/visitor-pass-registration' element={<VisitorPassForm/>}/>
-
+        <Route path='/admin/manage-visitor' element={<ManageVisitor/>}/>
+        <Route path='/admin/manage-security' element={<ManageSecurity/>}/>
+        <Route path='/details/:id' element={<VisitorPassView/>}/>
       </Routes>
     </BrowserRouter>
       {/* <WelcomePage/> */}

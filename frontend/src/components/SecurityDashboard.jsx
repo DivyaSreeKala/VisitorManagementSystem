@@ -1,77 +1,100 @@
-import React from 'react';
+import { React,useState } from 'react';
+import Header from './Header';
 import Sidebar from './Sidebar';
 
-function SecurityDashboard() {
-    const interviewData = [
-        {
-          name: 'Mark Lio',
-          department: 'IT',
-          type: 'Interview',
-          document: 'Aadhar',
-          status: 'Checked In'
-        },
-        {
-          name: 'Leo Stanton',
-          department: 'Electronics',
-          type: 'Meeting',
-          document: 'Pan Card',
-          status: 'Approved'
-        }
-      ];
-      
+const visitorData = [
+  { name: 'Mark Lio', department: 'IT', purpose: 'Interview', idProof: 'Aadhar', status: 'Checked In' },
+  { name: 'Leo Stanton', department: 'Electronics', purpose: 'Meeting', idProof: 'Pan Card', status: 'Approved' }
+];
+
+function securityDashboard() {
+  const [uniqueCode, setUniqueCode] = useState('');
+
+  const handleVerify = (e) => {
+    e.preventDefault();
+    console.log('Verifying code:', uniqueCode);
+  };
+
   return (
     <div className="flex overflow-hidden flex-col bg-slate-50">
-      <header className="flex flex-wrap gap-5 justify-between py-4 pr-20 pl-6 w-full font-bold text-center bg-white border-b border-gray-200 max-md:px-5 max-md:max-w-full">
-        <div className="flex gap-5 text-3xl tracking-wide text-black">
-          <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/a26c8f8f66b498ca15f03b38e0702f93f5adc24973319d21dd5822cd8ac844bb?placeholderIfAbsent=true&apiKey=f0b359b98b7042c7a2d21f164b56e543" alt="" className="object-contain shrink-0 rounded-full aspect-square w-[70px]" />
-          <h1 className="flex-auto my-auto">
-            VMS
-          </h1>
-        </div>
-        <button className="px-10 pt-2.5 pb-4 my-auto text-sm text-white whitespace-nowrap bg-red-500 rounded-xl max-md:px-5">
-          Logout
-        </button>
-      </header>
-      <div className="w-full max-w-[1385px] max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
-          {/* <Sidebar user={"security"} /> */}
-
-          <nav className="flex flex-col w-1/5 max-md:ml-0 max-md:w-full bg-white">
-      <div className="flex relative flex-col grow items-start px-14 pt-7 text-xl tracking-normal text-black rounded-none aspect-[0.296] pb-[620px] max-md:px-5 max-md:pb-24 max-md:mt-10">
-        {/* <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/b11d99b0ff4c4fb19fbd9324c9b8b9787a817e76a067dc8d5ead7b010b871118?placeholderIfAbsent=true&apiKey=f0b359b98b7042c7a2d21f164b56e543" alt="" className="object-cover absolute inset-0 size-full" /> */}
-        <div className="relative text-xl font-bold tracking-wide">
-          {/* Username */}
+      <Header />
+      <main className="flex gap-5 w-full max-md:max-w-full">
+        <Sidebar/>
+      {/* <aside className="flex flex-col w-1/5 max-md:ml-0 max-md:w-full border-r border-gray-200">
+      <div className="flex relative flex-col grow items-start px-14 pt-8 text-black rounded-none aspect-[0.296] pb-[780px] max-md:px-5 max-md:pb-24 max-md:mt-9 max-sm:hidden bg-white">
+        {/* <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/845a124b3c43379431d76dcf3508e929dec27cebfcce5c8dc2f1497a7b0588f5?placeholderIfAbsent=true&apiKey=f0b359b98b7042c7a2d21f164b56e543" alt="" className="object-cover absolute inset-0 size-full" /> */}
+        {/* <div className="relative text-xl font-bold tracking-wide">
+          Username
           <br />
-          <span className="text-base">security</span>
+          <span className="text-base">(Security)</span>
         </div>
-        <a href="#dashboard" className="relative mt-16 max-md:mt-10">Dashboard</a>
-        {/* <a href="#manage-visitor" className="relative mt-16 max-md:mt-10">Manage Visitor</a>
-        <a href="#manage-security" className="relative self-stretch mt-16 max-md:mt-10">Manage Security</a> */}
+        <nav className="relative mt-16 text-xl tracking-normal max-md:mt-10">
+          <a href="#dashboard">Dashboard</a>
+        </nav>
       </div>
-    </nav>
+    </aside> */} 
 
-          <main className="flex flex-col ml-5 w-4/5 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col mt-10 w-full max-md:mt-10 max-md:max-w-full">
-              <div className="self-center max-w-full w-[887px]">
-                <div className="flex gap-5 max-md:flex-col">
-                  {[
-                    { title: "Total Visitors", count: 100 },
-                    { title: "Monthly Visitors", count: 100 },
-                    { title: "Daily Visitors", count: 10 }
-                  ].map((stat, index) => (
-                    <div key={index} className="flex flex-col w-[33%] max-md:ml-0 max-md:w-full">
-                      <div className="flex flex-col grow items-start pt-4 pr-14 pb-8 pl-7 w-full font-bold bg-white rounded-md border-2 border-solid border-slate-100 shadow-[0px_20px_50px_rgba(220,224,249,0.5)] max-md:px-5 max-md:mt-7">
-                        <h2 className="text-lg tracking-normal text-neutral-700">{stat.title}</h2>
-                        <p className="mt-8 text-3xl tracking-wide text-neutral-800">{stat.count}</p>
-                        <p className="mt-4 text-sm tracking-normal text-neutral-400">Visitors</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+        <section className="flex flex-row ml-5 w-4/5 max-md:ml-0 max-md:w-full">
+      <div className="flex flex-col mt-6 max-md:mt-10 max-md:max-w-full">
+        <form onSubmit={handleVerify} className="flex flex-col items-center self-center px-20 pt-16 pb-32 ml-7 max-w-full bg-white rounded-md w-[808px] max-md:px-5 max-md:pb-24">
+          <div className="flex flex-col -mb-6 max-w-full w-[364px] max-md:mb-2.5">
+            <label htmlFor="uniqueCode" className="sr-only">Enter the unique code</label>
+            <input
+              id="uniqueCode"
+              type="text"
+              value={uniqueCode}
+              onChange={(e) => setUniqueCode(e.target.value)}
+              className="px-6 pt-1.5 pb-3 text-base tracking-normal text-black rounded-lg bg-neutral-200 max-md:px-5"
+              placeholder="Enter the unique code"
+            />
+            <button
+              type="submit"
+              className="self-center px-9 py-3 mt-10 max-w-full text-sm font-bold text-center text-white whitespace-nowrap bg-green-500 rounded-xl w-[123px] max-md:px-5 max-md:mt-10"
+            >
+              Verify
+            </button>
+          </div>
+        </form>
+        <section className="flex flex-col items-start px-11 pt-9 pb-40 mt-7 w-full bg-white rounded-md border-2 border-solid border-slate-100 max-md:px-5 max-md:pb-24 max-md:max-w-full">
+          <div className="flex flex-col self-stretch w-full font-bold text-center max-md:max-w-full">
+            <div className="flex flex-wrap gap-5 justify-between items-start self-end max-w-full w-[932px]">
+              <h2 className="text-2xl tracking-wide text-black">Today's Visitor Details</h2>
+              <button className="flex gap-2.5 justify-center items-center px-2.5 py-5 mt-1.5 text-sm tracking-normal text-blue-900 rounded-xl bg-neutral-100 min-h-[59px]">
+                Filter & Short
+                <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/e2ce8b2817157b757bae90550491d83565e607c4201ac5ccad3617078fdeb2ee?placeholderIfAbsent=true&apiKey=f0b359b98b7042c7a2d21f164b56e543" alt="" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square" />
+              </button>
+            </div>
+            <hr className="shrink-0 mt-24 h-0 border border-solid border-zinc-100 max-md:mt-10 max-md:max-w-full" />
+          </div>
+          {/* {visitorData.map((visitor, index) => (
+            <div key={index} className="flex flex-wrap justify-between w-full mt-4 text-sm tracking-normal">
+              <div className="flex flex-col">
+                <span className="text-neutral-400">Visitor's Name</span>
+                <span className="mt-4 font-bold text-black">{visitor.name}</span>
               </div>
-              <section className="mt-4 mb-0 ml-6 max-w-full w-[860px] max-md:mb-2.5">
-      <h1 className="sr-only">Interview Schedule</h1>
-      <table className="w-full text-sm font-bold tracking-normal text-black">
+              <div className="flex flex-col">
+                <span className="text-neutral-400">Department</span>
+                <span className="mt-4 font-bold text-black">{visitor.department}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-neutral-400">Purpose</span>
+                <span className="mt-4 font-bold text-black">{visitor.purpose}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-neutral-400">ID Proof</span>
+                <span className="mt-4 font-bold text-black">{visitor.idProof}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-neutral-400">Status</span>
+                <span className={`mt-4 px-2 py-1 text-center rounded ${visitor.status === 'Checked In' ? 'bg-teal-500 bg-opacity-20' : 'bg-zinc-400 bg-opacity-20'}`}>
+                  {visitor.status}
+                </span>
+              </div>
+            </div>
+          ))} */}
+                    {/* {visitorData.map((visitor, index) => ( */}
+            {/* <div key={index} className="flex flex-wrap justify-between w-full mt-4 text-sm tracking-normal"> */}
+            <table className="w-full text-sm font-bold tracking-normal text-black">
         <thead>
           <tr>
             <th className="text-left">Name</th>
@@ -82,7 +105,7 @@ function SecurityDashboard() {
           </tr>
         </thead>
         <tbody>
-          {interviewData.map((interview, index) => (
+          {visitorData.map((interview, index) => (
             <tr key={index} className="border-b border-gray-200">
               <td className="py-4">{interview.name}</td>
               <td className="py-4">{interview.department}</td>
@@ -101,13 +124,14 @@ function SecurityDashboard() {
           ))}
         </tbody>
       </table>
-    </section>
-            </div>
-          </main>
-        </div>
+            {/* </div> */}
+          {/* ))} */}
+        </section>
       </div>
+    </section>
+      </main>
     </div>
   );
 }
 
-export default SecurityDashboard;
+export default securityDashboard;

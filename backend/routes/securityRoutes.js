@@ -8,10 +8,12 @@ router.use(express.json());
 router.use(express.urlencoded({extended:true}));
 
 const securityModel = require('../models/securityData');
+const authenticateJWT = require("../auth/authMiddleware");
+const roleMiddleware = require("../auth/roleMiddleware");
 
 
 //post
-router.post('/add',async(req,res) => {
+router.post('/add',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
     try{
         const requestData = req.body;
         const hashPassword = await bcrypt.hash(req.body.password,13);
@@ -25,7 +27,7 @@ router.post('/add',async(req,res) => {
 })
 
 //update
-router.put('/edit/:id',async(req,res) => {
+router.put('/edit/:id',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
     try{
         const id = req.params.id;
         const data = await securityModel.findOneAndUpdate({ _id: id }, req.body);
@@ -35,7 +37,7 @@ router.put('/edit/:id',async(req,res) => {
     }
 });
 //delete
-router.delete('/delete/:id',async(req,res) => {
+router.delete('/delete/:id',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
     try{
         const id = req.params.id;
         const data = await securityModel.findByIdAndDelete(id);
@@ -45,7 +47,7 @@ router.delete('/delete/:id',async(req,res) => {
     }
 })
 //get all
-router.get('/',async(req,res) => {
+router.get('/',authenticateJWT,roleMiddleware('admin'),async(req,res) => {
     try{
         const data = await securityModel.find();
         res.status(200).send(data);
@@ -54,7 +56,7 @@ router.get('/',async(req,res) => {
     }
 })
 //get by id
-router.get('/:id',async(req,res) => {
+router.get('/:id',authenticateJWT,async(req,res) => {
     try{
         const data = await securityModel.findById(req.params.id);
         res.status(200).send(data);
