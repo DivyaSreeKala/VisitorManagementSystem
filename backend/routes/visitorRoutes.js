@@ -28,7 +28,16 @@ const storage = multer.diskStorage({
 
 router.post('/register',upload.single('idProof'),async(req,res) => {
     try{
-         // Construct the URL for the uploaded file
+        const email = req.body.email;
+        const existingVisitor = await visitorModel.findOne({ email });
+        console.log(existingVisitor)
+        if (existingVisitor && existingVisitor.status !== 'approved' && existingVisitor.status !== 'checked-in') {
+            return res.status(400).json({
+                success: false,
+                message: 'You can only submit a new request once your previous request is approved or you have checked in.'
+            });
+        }
+         
         const url = req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename;
         const requestData = {
             fullName:req.body.fullName,
@@ -40,6 +49,7 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
             idType:req.body.idType,
             idProof:url
         };
+        console.log(requestData)
         const data = new visitorModel(requestData);
         const savedData = await data.save();
         res.status(200).send(savedData);

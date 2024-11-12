@@ -1,39 +1,51 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Header from './Header';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../ProtectedRoutes/AuthProvider';
 const LoginForm = () => {
   const [input, setInput] = useState({
     username:"",
     password:""
   })   
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const onInputChange = (e) => {
     setInput({...input, [e.target.name]:e.target.value});
   }
-  const onLogin = (e) => {
+  const onLogin = async(e) => {
     e.preventDefault()
-    axios.post('http://localhost:3002/login',{
-      email:input.username,
-      password:input.password
-    }).then((res) => {
-      console.log(res);
-      if(res.data.token){
-            alert("Login Succesfull");
-            localStorage.setItem('token',res.data.token);
-            const user = res.data.username;
-            if(res.data.role == "admin")
-              navigate('/admin')
-            if(res.data.role == "security")
-              navigate('/security')
-      }
-      else{
-        alert(res.data);
-      }
+    const email = input.username;
+    const password = input.password;
+    const role = await login({email, password})
+    console.log(role)
+    if(role == "admin")
+      navigate('/admin')
+    if(role == "security")
+      navigate('/security')
+
+    //
+    // axios.post('http://localhost:3002/login',{
+    //   email:input.username,
+    //   password:input.password
+    // }).then((res) => {
+    //   console.log(res);
+    //   if(res.data.token){
+    //         alert("Login Succesfull");
+    //         localStorage.setItem('token',res.data.token);
+    //         const user = res.data.username;
+    //         if(res.data.role == "admin")
+    //           navigate('/admin')
+    //         if(res.data.role == "security")
+    //           navigate('/security')
+    //   }
+    //   else{
+    //     alert(res.data);
+    //   }
       
-    }).catch((err) => {
-      console.log(err);
-    })
+    // }).catch((err) => {
+    //   console.log(err);
+    // })
   }
   return (
     <main className="flex overflow-hidden flex-col pb-2 bg-slate-50 max-md:pb-24">

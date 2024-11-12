@@ -37,7 +37,7 @@ const visitorSchema = new mongoose.Schema({
     
     status:{
         type:String,
-        enum:["pending","approved","rejected"],
+        enum:["pending","approved","rejected","checked-in"],
         default:"pending"
     },
     // dateAlloted:Date,

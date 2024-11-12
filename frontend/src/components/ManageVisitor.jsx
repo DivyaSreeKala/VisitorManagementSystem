@@ -1,27 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import axios from 'axios';
 
-const visitorData = [
-  {
-    name: "Mark Lio",
-    department: "IT",
-    purpose: "Interview",
-    idProof: "Aadhar",
-    status: "Checked In",
-  },
-  {
-    name: "Leo Stanton",
-    department: "Electronics",
-    purpose: "Meeting",
-    idProof: "Pan Card",
-    status: "Approved",
-  },
-];
 
 function ManageVisitor() {
-  const [visitors, setVisitors] = useState(visitorData);
-
+  const [visitors, setVisitors] = useState([]);
+  const[selectedUser, setSelectedUser] = useState({});
+  useEffect(()=> {
+    const token = localStorage.getItem('token');
+      axios.get('http://localhost:3002/visitor',{
+        headers: {
+          Authorization: `Bearer ${token}`
+      }
+      }).then((res) => {
+        setVisitors(res.data)
+      }).catch((err) => {
+        console.log(err)
+      })
+  },[])
   const handleFilterSort = () => {
     // Implement filter and sort functionality
   };
@@ -32,10 +29,60 @@ function ManageVisitor() {
     setVisitors(updatedVisitors);
   };
 
-  const handleDelete = (index) => {
-    const updatedVisitors = visitors.filter((_, i) => i !== index);
-    setVisitors(updatedVisitors);
+  const handleDelete = (id) => {
+    // const updatedVisitors = visitors.filter((_, i) => i !== index);
+    // setVisitors(updatedVisitors);
+    const token = localStorage.getItem('token');
+    axios.delete('http://localhost:3002/visitor/delete/'+id,{
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then((res) => {
+      alert("visitor deleted successfully");
+      window.location.reload()
+    }).catch((err) => {
+      alert("error in deltetion");
+      console.log(err);
+    })
   };
+
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+
+    const handleViewClick = (visitor) => {
+        setSelectedUser(visitor);
+        setIsViewModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+      setIsViewModalOpen(false);
+        setSelectedUser(null);
+    };
+
+    // Close modal when clicking outside of it
+    const handleOutsideClick = (e) => {
+        if (e.target.className.includes('modal')) {
+            handleCloseModal();
+        }
+    };
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+    const handleEditClick = (visitor) => {
+        setSelectedUser(visitor);
+        setIsEditModalOpen(true);
+    };
+
+    const handleCloseEditModal = () => {
+      setIsEditModalOpen(false);
+        setSelectedUser(null);
+    };
+
+    // Close modal when clicking outside of it
+    const handleOutsideEditClick = (e) => {
+        if (e.target.className.includes('modal')) {
+          handleCloseEditModal();
+        }
+    };
 
   return (
     <div className="flex overflow-hidden flex-col bg-slate-50">
@@ -67,7 +114,7 @@ function ManageVisitor() {
                       <th className="text-left">Visitors Name</th>
                       <th className="text-left">Department</th>
                       <th className="text-left">Purpose</th>
-                      <th className="text-left">ID Proof</th>
+                      {/* <th className="text-left">ID Proof</th> */}
                       <th className="text-left">Status</th>
                       <th className="text-left">Action</th>
                     </tr>
@@ -75,14 +122,18 @@ function ManageVisitor() {
                   <tbody>
                     {visitors.map((visitor, index) => (
                       <tr key={index} className="border-t border-zinc-100">
-                        <td className="py-4">{visitor.name}</td>
+                        <td className="py-4">{visitor.fullName}</td>
                         <td>{visitor.department}</td>
+                        <td>{visitor.purposeOfVisit}</td>
+                        {/* <td>{visitor.purpose}</td>
                         <td>{visitor.purpose}</td>
-                        <td>{visitor.idProof}</td>
+                        <td>{visitor.purpose}</td> */}
+
+                        {/* <td>{visitor.idProof}</td> */}
                         <td>
                           <span
                             className={`inline-block px-2 py-1 text-center rounded ${
-                              visitor.status === "Checked In" ? "bg-teal-500 bg-opacity-20" : "bg-zinc-400 bg-opacity-20"
+                              visitor.status === "checked-in" || visitor.status === "approved" ? "bg-teal-500 bg-opacity-20" : "bg-zinc-400 bg-opacity-20"
                             }`}
                           >
                             {visitor.status}
@@ -90,15 +141,15 @@ function ManageVisitor() {
                         </td>
                         <td>
                           <div className="flex gap-1.5">
-                            <button className="px-4 py-1 rounded bg-teal-500 bg-opacity-20">View</button>
+                            <button className="px-4 py-1 rounded bg-teal-500 bg-opacity-20" onClick={() => handleViewClick(visitor)}>View</button>
                             <button
-                              onClick={() => handleStatusChange(index, visitor.status === "Checked In" ? "Approved" : "Checked In")}
+                              onClick={() => handleEditClick(visitor)}// visitor.status === "Checked In" ? "Approved" : "Checked In")
                               className="px-4 py-1 rounded bg-teal-500 bg-opacity-20"
                             >
                               Edit
                             </button>
                             <button
-                              onClick={() => handleDelete(index)}
+                              onClick={() => handleDelete(visitor._id)}
                               className="px-4 py-1 rounded bg-teal-500 bg-opacity-20"
                             >
                               Delete
@@ -113,6 +164,72 @@ function ManageVisitor() {
             </section>
           </main>
         </div>
+ {/* Modal for displaying visitor details */}
+        {isViewModalOpen && (
+                <div 
+                    className="modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" 
+                    onClick={handleOutsideClick}
+                >
+                    <div className="modal-content bg-white p-6 rounded shadow-lg w-100">
+                        <span 
+                            className="close cursor-pointer text-gray-500 hover:text-gray-700 float-right" 
+                            onClick={handleCloseModal}
+                        >
+                            &times;
+                        </span>
+                        {selectedUser && (
+                            <>
+                                <h2 className="text-lg font-bold mb-2">User Details</h2>
+                                <p><strong>Name:</strong> {selectedUser.fullName}</p>
+                                <p><strong>Email:</strong> {selectedUser.email}</p>
+                                <p><strong>Department:</strong> {selectedUser.department}</p>
+                                <p><strong>Purpose:</strong> {selectedUser.purposeOfVisit}</p>
+                                <p><strong>Status:</strong> {selectedUser.status}</p>
+                                <p><strong>ID Proof Type:</strong> {selectedUser.idType}</p>
+                                <p><strong>ID:</strong> <a href={selectedUser.idProof} target="_blank" >{selectedUser.idProof}</a></p>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+ {/* Modal for editing visitor details */}
+{isEditModalOpen && (
+                <div 
+                    className="modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" 
+                    onClick={handleOutsideEditClick}
+                >
+                    <div className="modal-content bg-white p-6 rounded shadow-lg w-96">
+                        <span 
+                            className="close cursor-pointer text-gray-500 hover:text-gray-700 float-right" 
+                            onClick={handleCloseEditModal}
+                        >
+                            &times;
+                        </span>
+                        {selectedUser && (
+                            <>
+                                <h2 className="text-lg font-bold mb-2">Edit Visitor</h2>
+                                <strong>Name:</strong><input type="text" name="fullName" id="fullName" disabled value ={selectedUser.fullName} /><br/>
+                                <strong>Email:</strong><input type="text" name="fullName" id="fullName" disabled value ={selectedUser.email} /><br/>
+                                <strong>Department:</strong><input type="text" name="fullName" id="fullName" disabled value ={selectedUser.department} /><br/>
+                                <strong>Purpose:</strong><input type="text" name="fullName" id="fullName" disabled value ={selectedUser.purposeOfVisit} /><br/>
+                                <strong>Status:</strong><input type="text" name="fullName" id="fullName" value ={selectedUser.status} /><br/>
+                                <strong>Time In:</strong><input type="datetime-local" name="fullName" id="fullName" value ={selectedUser.timeIn} /><br/>
+                                <strong>Time Out:</strong><input type="datetime-local" name="fullName" id="fullName" value ={selectedUser.timeOut} /><br/>
+
+                                <button 
+                              className="px-4 py-1 rounded bg-teal-500 bg-opacity-20"
+                            >
+                              Edit
+                            </button>
+
+                                {/* <p><strong>ID Proof Type:</strong> {selectedUser.idType}</p>
+                                <p><strong>ID:</strong> <a href={selectedUser.idProof} target="_blank" >{selectedUser.idProof}</a></p> */}
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+
       </div>
     </div>
   );

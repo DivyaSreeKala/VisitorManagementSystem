@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../ProtectedRoutes/AuthProvider';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   return (
     <header className="flex flex-wrap gap-5 justify-between px-5 py-2 w-full text-center bg-white border-b border-gray-200 max-md:px-5 max-md:max-w-full">
       <div className="flex gap-3 text-3xl tracking-wide text-black">
@@ -14,7 +18,8 @@ const Header = () => {
           VMS
         </h2>
       </div>
-      <button className="px-10 pt-2.5 pb-4 my-auto text-sm text-white whitespace-nowrap bg-red-500 rounded-xl max-md:px-5">
+      <button className="px-10 pt-2.5 pb-4 my-auto text-sm text-white whitespace-nowrap bg-red-500 rounded-xl max-md:px-5" onClick={() => {logout()
+                                                                                                                                        navigate('/login')}}>
           Logout
         </button>
       {/* <nav>
