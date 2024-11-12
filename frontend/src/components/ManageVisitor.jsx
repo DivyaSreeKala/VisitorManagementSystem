@@ -7,6 +7,11 @@ import axios from 'axios';
 function ManageVisitor() {
   const [visitors, setVisitors] = useState([]);
   const[selectedUser, setSelectedUser] = useState({});
+  const [formData, setFormData] = useState({
+    status:'',
+    timeIn:'',
+    timeOut:''
+  });
   useEffect(()=> {
     const token = localStorage.getItem('token');
       axios.get('http://localhost:3002/visitor',{
@@ -69,6 +74,12 @@ function ManageVisitor() {
 
     const handleEditClick = (visitor) => {
         setSelectedUser(visitor);
+        // if (selectedUser) {
+          setFormData({
+              status: visitor.status,
+              timeIn: visitor.timeIn,
+              timeOut: visitor.timeOut
+          });
         setIsEditModalOpen(true);
     };
 
@@ -84,17 +95,15 @@ function ManageVisitor() {
         }
     };
 
-    const [edit, setEdit] = useState({
-      status:'',
-      timeIn:'',
-      timeOut:''
-    });
+    
+
+
     const handleChange = (e) => {
-      console.log(edit)
-      setEdit({...edit ,[e.target.name]: e.target.value}); // Update state with selected value
+      console.log(formData)
+      setEdit({...formData ,[e.target.name]: e.target.value}); // Update state with selected value
   };
   const onEdit = () => {
-    console.log(edit)
+    console.log(formData)
   }
 
 

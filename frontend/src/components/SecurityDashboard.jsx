@@ -1,33 +1,52 @@
-import { React,useState } from 'react';
+import { React,useEffect,useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import axios from 'axios';
 
-const visitorData = [
-  { name: 'Mark Lio', department: 'IT', purpose: 'Interview', idProof: 'Aadhar', status: 'Checked In' },
-  { name: 'Leo Stanton', department: 'Electronics', purpose: 'Meeting', idProof: 'Pan Card', status: 'Approved' }
-];
 
 function securityDashboard() {
   const [uniqueCode, setUniqueCode] = useState('');
+  const [visitors, setVisitors] = useState([]);
+
+  useEffect(()=> {
+    const token = localStorage.getItem('token');
+      axios.get('http://localhost:3002/visitor/daily'
+    //     ,{
+    //     headers: {
+    //       Authorization: `Bearer ${token}`
+    //   }
+    //  }
+    ).then((res) => {
+        console.log(res.data)
+        setVisitors(res.data)
+      }).catch((err) => {
+        console.log(err)
+      })
+  },[])
 
   const handleVerify = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     console.log('Verifying code:', uniqueCode);
 
-    axios.get('https://localhost:3002/visitor/verify-token/'+uniqueCode
+   
+    axios.get('http://localhost:3002/visitor/verify-token/'+uniqueCode
     //   ,{
     //   headers: {
     //     Authorization:`Bearer ${token}`
     //   }
     // }
   ).then((res) => {
+    if(res.data[0].fullName){
       alert("Allowed");
-      console.group(res)
+    }
+    // }else{
+    //   alert("Not allowed")
+    // }
+    console.group(res)
     }).catch((err) => {
       alert("error in validation")
-      console.log(err)
+      // console.log(err)
     })
   };
 
@@ -36,19 +55,7 @@ function securityDashboard() {
       <Header />
       <main className="flex gap-5 w-full max-md:max-w-full">
         <Sidebar/>
-      {/* <aside className="flex flex-col w-1/5 max-md:ml-0 max-md:w-full border-r border-gray-200">
-      <div className="flex relative flex-col grow items-start px-14 pt-8 text-black rounded-none aspect-[0.296] pb-[780px] max-md:px-5 max-md:pb-24 max-md:mt-9 max-sm:hidden bg-white">
-        {/* <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/845a124b3c43379431d76dcf3508e929dec27cebfcce5c8dc2f1497a7b0588f5?placeholderIfAbsent=true&apiKey=f0b359b98b7042c7a2d21f164b56e543" alt="" className="object-cover absolute inset-0 size-full" /> */}
-        {/* <div className="relative text-xl font-bold tracking-wide">
-          Username
-          <br />
-          <span className="text-base">(Security)</span>
-        </div>
-        <nav className="relative mt-16 text-xl tracking-normal max-md:mt-10">
-          <a href="#dashboard">Dashboard</a>
-        </nav>
-      </div>
-    </aside> */} 
+      
 
         <section className="flex flex-row ml-5 w-4/5 max-md:ml-0 max-md:w-full">
       <div className="flex flex-col mt-6 max-md:mt-10 max-md:max-w-full">
@@ -83,58 +90,33 @@ function securityDashboard() {
             </div>
             <hr className="shrink-0 mt-24 h-0 border border-solid border-zinc-100 max-md:mt-10 max-md:max-w-full" />
           </div>
-          {/* {visitorData.map((visitor, index) => (
-            <div key={index} className="flex flex-wrap justify-between w-full mt-4 text-sm tracking-normal">
-              <div className="flex flex-col">
-                <span className="text-neutral-400">Visitor's Name</span>
-                <span className="mt-4 font-bold text-black">{visitor.name}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-neutral-400">Department</span>
-                <span className="mt-4 font-bold text-black">{visitor.department}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-neutral-400">Purpose</span>
-                <span className="mt-4 font-bold text-black">{visitor.purpose}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-neutral-400">ID Proof</span>
-                <span className="mt-4 font-bold text-black">{visitor.idProof}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-neutral-400">Status</span>
-                <span className={`mt-4 px-2 py-1 text-center rounded ${visitor.status === 'Checked In' ? 'bg-teal-500 bg-opacity-20' : 'bg-zinc-400 bg-opacity-20'}`}>
-                  {visitor.status}
-                </span>
-              </div>
-            </div>
-          ))} */}
-                    {/* {visitorData.map((visitor, index) => ( */}
+          
             {/* <div key={index} className="flex flex-wrap justify-between w-full mt-4 text-sm tracking-normal"> */}
             <table className="w-full text-sm font-bold tracking-normal text-black">
         <thead>
           <tr>
             <th className="text-left">Name</th>
             <th className="text-left">Department</th>
-            <th className="text-left">Type</th>
-            <th className="text-left">Document</th>
+            <th className="text-left">Purpose</th>
+          
             <th className="text-left">Status</th>
           </tr>
         </thead>
         <tbody>
-          {visitorData.map((interview, index) => (
+          {visitors.map((visitor, index) => (
             <tr key={index} className="border-b border-gray-200">
-              <td className="py-4">{interview.name}</td>
-              <td className="py-4">{interview.department}</td>
-              <td className="py-4">{interview.type}</td>
-              <td className="py-4">{interview.document}</td>
+              <td className="py-4">{visitor.fullName}</td>
+              <td className="py-4">{visitor.department}</td>
+              <td className="py-4">{visitor.purposeOfVisit}</td>
+             
+
               <td className="py-4">
                 <span
                   className={`inline-block px-2 py-1 rounded ${
-                    interview.status === 'Checked In' ? 'bg-teal-500' : 'bg-zinc-400'
+                    visitor.status === 'Checked In' ? 'bg-teal-500' : 'bg-zinc-400'
                   } bg-opacity-20 w-[81px] text-center`}
                 >
-                  {interview.status}
+                  {visitor.status}
                 </span>
               </td>
             </tr>

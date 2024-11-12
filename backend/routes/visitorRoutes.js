@@ -111,7 +111,7 @@ router.post('/register',upload.single('idProof'),async(req,res) => {
                 const mailOptions = {
                     from: 'dsk.dev77@gmail.com',
                     to: 'divyasreekala99@gmail.com',
-                    subject: 'Hello',
+                    subject: 'Your pass is approved',
                     html: `<div><h1>Hello World!</h1><a href="${req.protocol}://${req.hostname}:5173/details/${id}">Your Pass</a></div>`,
                 };
                 console.log(req)
