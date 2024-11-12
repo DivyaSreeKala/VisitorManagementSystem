@@ -84,6 +84,20 @@ function ManageVisitor() {
         }
     };
 
+    const [edit, setEdit] = useState({
+      status:'',
+      timeIn:'',
+      timeOut:''
+    });
+    const handleChange = (e) => {
+      console.log(edit)
+      setEdit({...edit ,[e.target.name]: e.target.value}); // Update state with selected value
+  };
+  const onEdit = () => {
+    console.log(edit)
+  }
+
+
   return (
     <div className="flex overflow-hidden flex-col bg-slate-50">
       <Header />
@@ -212,12 +226,19 @@ function ManageVisitor() {
                                 <strong>Email:</strong><input type="text" name="fullName" id="fullName" disabled value ={selectedUser.email} /><br/>
                                 <strong>Department:</strong><input type="text" name="fullName" id="fullName" disabled value ={selectedUser.department} /><br/>
                                 <strong>Purpose:</strong><input type="text" name="fullName" id="fullName" disabled value ={selectedUser.purposeOfVisit} /><br/>
-                                <strong>Status:</strong><input type="text" name="fullName" id="fullName" value ={selectedUser.status} /><br/>
-                                <strong>Time In:</strong><input type="datetime-local" name="fullName" id="fullName" value ={selectedUser.timeIn} /><br/>
-                                <strong>Time Out:</strong><input type="datetime-local" name="fullName" id="fullName" value ={selectedUser.timeOut} /><br/>
+                                <strong>Status:</strong>
+                                {/* <input type="text" name="fullName" id="fullName" value ={selectedUser.status} /><br/> */}
+                                <select name="status" id="status" value={selectedUser.status} onChange={handleChange} required>
+                                <option value="" disabled>Select Status</option>
+                                <option value="Approve">Approve</option>
+                                <option value="Reject">Reject</option>
+                            </select>
+                                <strong>Time In:</strong><input type="datetime-local" name="fullName" id="fullName" value ={selectedUser.timeIn} onChange={handleChange} /><br/>
+                                <strong>Time Out:</strong><input type="datetime-local" name="fullName" id="fullName" value ={selectedUser.timeOut} onChange={handleChange} /><br/>
 
-                                <button 
+                                <button type="button"
                               className="px-4 py-1 rounded bg-teal-500 bg-opacity-20"
+                              // onClick={}
                             >
                               Edit
                             </button>

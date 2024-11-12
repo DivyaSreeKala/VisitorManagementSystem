@@ -1,6 +1,7 @@
 import { React,useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import axios from 'axios';
 
 const visitorData = [
   { name: 'Mark Lio', department: 'IT', purpose: 'Interview', idProof: 'Aadhar', status: 'Checked In' },
@@ -12,7 +13,22 @@ function securityDashboard() {
 
   const handleVerify = (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
     console.log('Verifying code:', uniqueCode);
+
+    axios.get('https://localhost:3002/visitor/verify-token/'+uniqueCode
+    //   ,{
+    //   headers: {
+    //     Authorization:`Bearer ${token}`
+    //   }
+    // }
+  ).then((res) => {
+      alert("Allowed");
+      console.group(res)
+    }).catch((err) => {
+      alert("error in validation")
+      console.log(err)
+    })
   };
 
   return (
@@ -48,7 +64,8 @@ function securityDashboard() {
               placeholder="Enter the unique code"
             />
             <button
-              type="submit"
+              type="button"
+              onClick={handleVerify}
               className="self-center px-9 py-3 mt-10 max-w-full text-sm font-bold text-center text-white whitespace-nowrap bg-green-500 rounded-xl w-[123px] max-md:px-5 max-md:mt-10"
             >
               Verify

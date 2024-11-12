@@ -150,7 +150,8 @@ router.delete('/delete/:id',authenticateJWT,roleMiddleware('admin'),async(req,re
     router.get('/verify-token/:token',async(req,res) => {
         try{
             const token = req.params.token;
-            console.log(token)
+            console.log(token);
+            console.log("token")
             const data = await visitorModel.find({uniqueCode:token});
             console.log(data);
             res.status(200).send(data);
