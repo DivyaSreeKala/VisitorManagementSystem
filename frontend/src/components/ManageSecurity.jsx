@@ -36,9 +36,9 @@ useEffect(() => {
                   + Add New Security
                 </button>
               </div>
-              <div className="px-14 pt-3 pb-4 ml-16 max-w-full text-sm font-bold tracking-normal text-center text-black bg-neutral-100 w-[164px] max-md:px-5 max-md:ml-2.5">
+              {/* <div className="px-14 pt-3 pb-4 ml-16 max-w-full text-sm font-bold tracking-normal text-center text-black bg-neutral-100 w-[164px] max-md:px-5 max-md:ml-2.5">
                 Date  v
-              </div>
+              </div> */}
               {/* <hr className="shrink-0 mt-12 h-0 border border-solid border-zinc-100 max-md:mt-10 max-md:max-w-full" /> */}
               <div className="mt-1 mr-5 ml-4 max-md:mr-2.5 max-md:max-w-full">
                 

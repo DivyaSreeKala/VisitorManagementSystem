@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
             const response = await axios.post('http://localhost:3002/login', credentials);
             console.log(response)
             if(response.data.token){
-                alert("Login SUccessfull")
+                alert("Login Successfull")
                 const { token, role } = response.data; // Assuming your API returns a token and user object
                 localStorage.setItem('token', token); // Store token in local storage
                 setUser(user); // Set user state

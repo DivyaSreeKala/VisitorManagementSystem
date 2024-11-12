@@ -97,10 +97,17 @@ function ManageVisitor() {
 
     
 
+  //   const handleChange = (e) => {
+  //     console.log(formData)
+  //     setFormData({...formData ,[e.target.name]: e.target.value}); // Update state with selected value
+  // };
 
-    const handleChange = (e) => {
-      console.log(formData)
-      setEdit({...formData ,[e.target.name]: e.target.value}); // Update state with selected value
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+        ...prevData,
+        [name]: value
+    }));
   };
   const onEdit = () => {
     console.log(formData)
@@ -125,11 +132,11 @@ function ManageVisitor() {
                   <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/f5c5bb4b9b1d526023b9e2da708c8b219c5ddeac2d6a71e7bd04d6cbc505803c?placeholderIfAbsent=true&apiKey=f0b359b98b7042c7a2d21f164b56e543" alt="" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square" />
                 </button>
               </div>
-              <div className="flex flex-wrap gap-5 justify-between ml-16 max-w-full text-sm tracking-normal text-center text-black w-[560px]">
+              {/* <div className="flex flex-wrap gap-5 justify-between ml-16 max-w-full text-sm tracking-normal text-center text-black w-[560px]">
                 <button className="px-8 py-3.5 bg-neutral-100 max-md:pl-5">Department V</button>
                 <button className="px-11 pt-3 pb-4 bg-neutral-100 max-md:px-5">Status V</button>
                 <button className="px-8 py-3.5 bg-neutral-100 max-md:pl-5">Department V</button>
-              </div>
+              </div> */}
               <div className="mt-12 max-md:mt-10 max-md:max-w-full">
                 <table className="w-full text-sm tracking-normal text-black">
                   <thead>
@@ -237,13 +244,13 @@ function ManageVisitor() {
                                 <strong>Purpose:</strong><input type="text" name="fullName" id="fullName" disabled value ={selectedUser.purposeOfVisit} /><br/>
                                 <strong>Status:</strong>
                                 {/* <input type="text" name="fullName" id="fullName" value ={selectedUser.status} /><br/> */}
-                                <select name="status" id="status" value={selectedUser.status} onChange={handleChange} required>
+                                <select name="status" id="status" value={formData.status} onChange={handleChange} required>
                                 <option value="" disabled>Select Status</option>
                                 <option value="Approve">Approve</option>
                                 <option value="Reject">Reject</option>
                             </select>
-                                <strong>Time In:</strong><input type="datetime-local" name="fullName" id="fullName" value ={selectedUser.timeIn} onChange={handleChange} /><br/>
-                                <strong>Time Out:</strong><input type="datetime-local" name="fullName" id="fullName" value ={selectedUser.timeOut} onChange={handleChange} /><br/>
+                                <strong>Time In:</strong><input type="datetime-local" name="timeIn" id="timeIn" value ={formData.timeIn} onChange={handleChange} /><br/>
+                                <strong>Time Out:</strong><input type="datetime-local" name="timeOut" id="timeOut" value ={formData.timeOut} onChange={handleChange} /><br/>
 
                                 <button type="button"
                               className="px-4 py-1 rounded bg-teal-500 bg-opacity-20"
@@ -251,7 +258,6 @@ function ManageVisitor() {
                             >
                               Edit
                             </button>
-
                                 {/* <p><strong>ID Proof Type:</strong> {selectedUser.idType}</p>
                                 <p><strong>ID:</strong> <a href={selectedUser.idProof} target="_blank" >{selectedUser.idProof}</a></p> */}
                             </>

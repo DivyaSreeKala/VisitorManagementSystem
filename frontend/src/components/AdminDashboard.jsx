@@ -68,7 +68,7 @@ function AdminDashboard() {
             <th className="text-left py-4">Name</th>
             <th className="text-left py-4">Department</th>
             <th className="text-left py-4">Purpose</th>
-            <th className="text-left py-4">Document</th>
+            {/* <th className="text-left py-4">Document</th> */}
             <th className="text-left py-4">Status</th>
           </tr>
         </thead>
@@ -84,7 +84,7 @@ function AdminDashboard() {
               <td className="py-4">
                 <span
                   className={`inline-block px-2 py-1 rounded ${
-                    visitor.status === 'Checked In' ? 'bg-teal-500 w-fit' : 'bg-zinc-400'
+                    visitor.status === 'Checked-in' ? 'bg-teal-500 w-fit' : 'bg-zinc-400'
                   } bg-opacity-20 w-[81px] text-center`}
                 >
                   {visitor.status}
